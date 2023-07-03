@@ -14,23 +14,24 @@ class handler(BaseHTTPRequestHandler):
         query_string_list = parse.parse_qsl(url_components.query)
         dic = dict(query_string_list)
 
+    
+  
         # response code
         self.send_response(200)
-
         # headers
         self.headers.add_header("Content-type", "text/plain")
         self.end_headers()
 
-        word = dic["word"]
+        capital = dic["capital"]
 
         # create message
-        url = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+        url = "https://restcountries.com/v3.1/capital/{capital}"
 
-        response = requests.get(url + word)
+        response = requests.get(url + capital)
         data = response.json()
         definitions = []
-        for word_data in data:
-            definition = word_data["meanings"][0]["definitions"][0]["definition"]
+        for capital in data:
+            definition = capital["meanings"][0]["definitions"][0]["definition"]
             definitions.append(definition)
 
         message = str(definitions)
