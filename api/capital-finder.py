@@ -27,7 +27,7 @@ class handler(BaseHTTPRequestHandler):
             data = response.json()
             message = ""
             for country_data in data:
-                name = country_data["name"][0]["official"]
+                name = country_data["name"][0]["capital"][0]
                 message = f"{capital} is the capital of {name}."
                 break
             # for capital in data:
