@@ -18,18 +18,28 @@ class handler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/plain")
         self.end_headers()
 
-        capital = dic.get("capital", "")
+        country = dic.get("country")
+        capital = dic.get("capital")
 
-        url = f"https://restcountries.com/v3.1/capital/{capital}"
+        if country:
+            url = f"https://restcountries.com/v3.1/name/"
+            response = requests.get(url + country)
+            data = response.json()
+            message = ""
+            for country_data in data:
+                name = country_data.get("name", {}).get("common", "")
+                message = f"{capital} is the capital of {name}."
+                break
 
-        response = requests.get(url)
-        data = response.json()
-        message = ""
-
-        for country_data in data:
-            name = country_data.get("name", {}).get("common", "")
-            message = f"{capital} is the capital of {name}."
-            break
+        elif capital:
+            url = f"https://restcountries.com/v3.1/capital/" 
+            response = requests.get(url + capital)
+            data = response.json()
+            message = ""
+            for capital in data:
+                name = capital.get("name", {}).get("common", "")
+                message = f"The capital of {name} is {capital}."
+                break
 
         self.wfile.write(message.encode())
 
