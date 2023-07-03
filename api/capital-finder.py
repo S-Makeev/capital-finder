@@ -26,8 +26,8 @@ class handler(BaseHTTPRequestHandler):
             message = ""
             response = requests.get(url + country)
             country_data = response.json()
-            country_message = country_data[0]['capital'][0]
-            message = str(f"The capital of {country} is {country_message}.")
+            country_object = country_data[0]['capital'][0]
+            message = str(f"The capital of {country} is {country_object}.")
             self.wfile.write(message.encode())
 
             return
@@ -36,9 +36,9 @@ class handler(BaseHTTPRequestHandler):
             url = "https://restcountries.com/v3.1/capital/"
             message = ""
             response = requests.get(url + capital)
-            data = response.json()
-            country_message = data[0]['name']['common']
-            message = str(f"{capital} is the capital of {country_message}.")
+            capital_data = response.json()
+            capital_object = capital_data[0]['name']['common']
+            message = str(f"{capital} is the capital of {capital_object}.")
             self.wfile.write(message.encode())
 
             return
