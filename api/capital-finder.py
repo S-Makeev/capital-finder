@@ -27,10 +27,12 @@ class handler(BaseHTTPRequestHandler):
             data = response.json()
             message = ""
             for country_data in data:
-                name = country_data.get("name", {}).get("common", "")
+                name = country_data["name"]["official"]
                 message = f"{capital} is the capital of {name}."
                 break
-
+            # for capital in data:
+            # definition = capital["meanings"][0]["definitions"][0]["definition"]
+            # definitions.append(definition)
         elif capital:
             url = f"https://restcountries.com/v3.1/capital/" 
             response = requests.get(url + capital)
