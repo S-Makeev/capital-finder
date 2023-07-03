@@ -7,37 +7,34 @@ import requests
 
 
 class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
+      def do_GET(self):
         # parse the query from path
         path = self.path
         url_components = parse.urlsplit(path)
         query_string_list = parse.parse_qsl(url_components.query)
         dic = dict(query_string_list)
 
-    
-    # https://restcountries.com/v3.1/capital/{capital}
         # response code
         self.send_response(200)
-
         # headers
-        self.headers.add_header("Content-type", "text/plain")
+        self.send_header("Content-type", "text/plain")
         self.end_headers()
 
-        capital = dic("word", "")
+        capital = dic.get("capital", "")
 
         # create message
-        url = "https://restcountries.com/v3.1/capital/"
+        url = f"https://restcountries.com/v3.1/capital/{capital}"
 
-        response = requests.get(url + capital)
+        response = requests.get(url)
         data = response.json()
         country_res = []
-        for capital_data in data:
-            country = capital_data["name"][0]["common"][0]["official"]
-            country_res.append(country)
+
+        for country_data in data:
+            name = country_data.get("name", {}).get("common", "")
+            country_res.append(name)
 
         message = str(country_res)
 
-        # respond with the formatted current time?
         self.wfile.write(message.encode())
 
         return
