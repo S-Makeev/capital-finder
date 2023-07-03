@@ -14,29 +14,30 @@ class handler(BaseHTTPRequestHandler):
         query_string_list = parse.parse_qsl(url_components.query)
         dic = dict(query_string_list)
 
+    
+    # https://restcountries.com/v3.1/capital/{capital}
         # response code
         self.send_response(200)
+
         # headers
-        self.send_header("Content-type", "text/plain")
+        self.headers.add_header("Content-type", "text/plain")
         self.end_headers()
 
-        capital = dic.get("capital", "")
+        capital = dic("word", "")
 
         # create message
-        url = f"https://restcountries.com/v3.1/capital/{capital}"
+        url = "https://restcountries.com/v3.1/capital/"
 
-        response = requests.get(url)
+        response = requests.get(url + capital)
         data = response.json()
-        definitions = []
-        for country_data in data:
-            try:
-                definition = country_data["meanings"][0]["definitions"][0]["definition"]
-                definitions.append(definition)
-            except (KeyError, IndexError):
-                pass
+        country_res = []
+        for capital_data in data:
+            country = capital_data["name"][0]["common"][0]["official"]
+            country_res.append(country)
 
-        message = str(definitions)
+        message = str(country_res)
 
+        # respond with the formatted current time?
         self.wfile.write(message.encode())
 
         return
