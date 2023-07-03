@@ -20,28 +20,21 @@ class handler(BaseHTTPRequestHandler):
 
         country = dic.get("country")
         capital = dic.get("capital")
-
+        
+        message = ""
+        url = "https://restcountries.com/v3.1/"
+        
         if country:
-            url = f"https://restcountries.com/v3.1/name/"
             response = requests.get(url + country)
-            data = response.json()
-            message = ""
-            for country_data in data:
-                name = country_data["name"][0]["capital"][0]
-                message = f"{capital} is the capital of {name}."
-                break
-            # for capital in data:
-            # definition = capital["meanings"][0]["definitions"][0]["definition"]
-            # definitions.append(definition)
+            country_data = response.json()
+            country_message = country_data[0]['capital'][0]
+            message = f"The capital of {country} is {country_message}."
+
         elif capital:
-            url = f"https://restcountries.com/v3.1/capital/" 
             response = requests.get(url + capital)
             data = response.json()
-            message = ""
-            for capital in data:
-                name = capital.get("name", {}).get("common", "")
-                message = f"The capital of {name} is {capital}."
-                break
+            country_message = data[0]['name']['common']
+            message = f"{capital} is the capital of {country_message}."
 
         self.wfile.write(message.encode())
 
